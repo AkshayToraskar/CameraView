@@ -4,9 +4,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -17,6 +22,8 @@ import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraLogger;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.Frame;
+import com.otaliastudios.cameraview.FrameProcessor;
 import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.Mode;
 import com.otaliastudios.cameraview.VideoResult;
@@ -41,9 +48,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         camera = findViewById(R.id.camera);
         camera.setLifecycleOwner(this);
         camera.addCameraListener(new CameraListener() {
-            public void onCameraOpened(@NonNull CameraOptions options) { onOpened(options); }
-            public void onPictureTaken(@NonNull PictureResult result) { onPicture(result); }
-            public void onVideoTaken(@NonNull VideoResult result) { onVideo(result); }
+            public void onCameraOpened(@NonNull CameraOptions options) {
+                onOpened(options);
+            }
+
+            public void onPictureTaken(@NonNull PictureResult result) {
+                onPicture(result);
+            }
+
+            public void onVideoTaken(@NonNull VideoResult result) {
+                onVideo(result);
+            }
+
             public void onCameraError(@NonNull CameraException exception) {
                 onError(exception);
             }
@@ -71,6 +87,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             public void onGlobalLayout() {
                 BottomSheetBehavior b = BottomSheetBehavior.from(controlPanel);
                 b.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+
+        camera.addFrameProcessor(new FrameProcessor() {
+            @Override
+            public void process(@NonNull Frame frame) {
+                Log.v("asdf", "asdf");
             }
         });
     }
@@ -117,12 +141,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.edit: edit(); break;
-            case R.id.capturePicture: capturePicture(); break;
-            case R.id.capturePictureSnapshot: capturePictureSnapshot(); break;
-            case R.id.captureVideo: captureVideo(); break;
-            case R.id.captureVideoSnapshot: captureVideoSnapshot(); break;
-            case R.id.toggleCamera: toggleCamera(); break;
+            case R.id.edit:
+                edit();
+                break;
+            case R.id.capturePicture:
+                capturePicture();
+                break;
+            case R.id.capturePictureSnapshot:
+                capturePictureSnapshot();
+                break;
+            case R.id.captureVideo:
+                captureVideo();
+                break;
+            case R.id.captureVideoSnapshot:
+                captureVideoSnapshot();
+                break;
+            case R.id.toggleCamera:
+                toggleCamera();
+                break;
         }
     }
 
